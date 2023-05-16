@@ -13,7 +13,7 @@ class DataService(metaclass=Singleton):
         self.config_service = config_service
         self.connection = None
         
-        if config_service.execute_schema:
+        if config_service.postgres_execute_schema:
             self.__execute_schema()
         
     def __execute_schema(self):

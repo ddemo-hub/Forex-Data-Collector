@@ -19,27 +19,27 @@ class ConfigService(metaclass=Singleton):
                    
     @property
     def postgres_user(self):
-        return self.config["connection"]["PostgreSQL"]["user"] 
+        return self.config["dbms"]["PostgreSQL"]["user"] 
     
     @property
     def postgres_password(self):
-        return self.config["connection"]["PostgreSQL"]["password"] 
+        return self.config["dbms"]["PostgreSQL"]["password"] 
     
     @property
     def postgres_host(self):
-        return self.config["connection"]["PostgreSQL"]["host"] 
+        return self.config["dbms"]["PostgreSQL"]["host"] 
     
     @property
     def postgres_port(self):
-        return self.config["connection"]["PostgreSQL"]["port"] 
+        return self.config["dbms"]["PostgreSQL"]["port"] 
     
     @property
     def postgres_database(self):
-        return self.config["connection"]["PostgreSQL"]["database"] 
+        return self.config["dbms"]["PostgreSQL"]["database"] 
 
     @property
-    def execute_schema(self):
-        return self.config["connection"]["execute_schema"]
+    def postgres_execute_schema(self):
+        return self.config["dbms"]["PostgreSQL"]["execute_schema"]
     
     @property
     def secret_key(self):
