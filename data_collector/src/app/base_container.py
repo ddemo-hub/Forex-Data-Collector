@@ -6,6 +6,6 @@ from src.utils.singleton import Singleton
 from dataclasses import dataclass
 
 @dataclass
-class BaseCollectorContainer(metaclass=Singleton):
+class BaseContainer(metaclass=Singleton):
     config_service: ConfigService
     data_service: DataService

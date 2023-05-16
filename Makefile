@@ -9,6 +9,12 @@ init:
 run: init 
 	.venv/bin/python3 data_collector/__main__.py
 
-clean:
-	rm -rf __pycache__
+clean:	
+	rm -rf data_collector/src/services/__pycache__
+	rm -rf data_collector/controllers/__pycache__
+	rm -rf data_collector/collectors/__pycache__
+	rm -rf data_collector/src/utils/__pycache__
+	rm -rf data_collector/src/app/__pycache__
+	rm -rf data_collector/src/__pycache__
+
 	rm -rf .venv

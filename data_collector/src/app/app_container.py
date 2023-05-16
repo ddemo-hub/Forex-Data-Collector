@@ -4,7 +4,7 @@ from src.utils.globals import Globals
 from src.services.config_service import ConfigService
 from src.services.data_service import DataService
 
-from .base_collector_container import BaseCollectorContainer
+from .base_container import BaseContainer
 
 from collectors import *
 
@@ -18,6 +18,6 @@ class AppContainer(metaclass=Singleton):
     
     data_service = DataService(config_service=config_service)
     
-    base_collector_container = BaseCollectorContainer(config_service=config_service, data_service=data_service)
+    base_container = BaseContainer(config_service=config_service, data_service=data_service)
 
-    tcmb_collector = TCMBCollector(base_collector_container)
+    tcmb_collector = TCMBCollector(base_container)

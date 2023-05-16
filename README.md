@@ -6,8 +6,7 @@ TBA
 
 ## Installation
 ### Dependencies
-Ubuntu 22.04 \
-PostgreSQL 15.3 \
+PostgreSQL 15 \
 Python 3 \
 Python packages used can be found in requirements.txt 
 ### Setup

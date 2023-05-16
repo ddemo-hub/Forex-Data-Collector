@@ -23,9 +23,9 @@ def create_app(app_container: AppContainer):
     app.config["SECRET_KEY"] = app_container.config_service.secret_key
     
     app.add_url_rule(
-        "/service", 
+        "/data_collector", 
         view_func=ServiceController.as_view(
-            "service", 
+            "data_collector", 
             config_service=app_container.config_service, 
             data_service=app_container.data_service
         )
