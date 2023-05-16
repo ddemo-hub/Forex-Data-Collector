@@ -38,6 +38,10 @@ class ConfigService(metaclass=Singleton):
         return self.config["connection"]["PostgreSQL"]["database"] 
 
     @property
+    def execute_schema(self):
+        return self.config["connection"]["execute_schema"]
+    
+    @property
     def secret_key(self):
         secret_key = self.config["service"]["secret_key"]
         return secret_key if secret_key is not None else uuid.uuid4().hex

@@ -4,3 +4,5 @@ PostgreSQL:
   host:
   port:
   database:
+
+execute_schema: False

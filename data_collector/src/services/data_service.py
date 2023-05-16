@@ -13,17 +13,19 @@ class DataService(metaclass=Singleton):
         self.config_service = config_service
         self.connection = None
         
-        self.__execute_schema()
+        if config_service.execute_schema:
+            self.__execute_schema()
         
     def __execute_schema(self):
         """ 
             Parse .sql file and execute the statements 
             SQL statements must end with a semicolon
         """
-        connection = psycopg2.connect(
-            host=self.config_service.mysql_host,
-            user=self.config_service.mysql_user,
-            password=self.config_service.mysql_password
+        connection = psycopg2.connect(            
+            user=self.config_service.postgres_user,
+            password=self.config_service.postgres_password,
+            host=self.config_service.postgres_host,
+            port=self.config_service.postgres_port,
         )
         cursor = connection.cursor()
 
