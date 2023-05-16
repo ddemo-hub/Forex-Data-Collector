@@ -12,7 +12,6 @@ class ServiceController(MethodView):
         self.config_service = config_service
         self.data_service = data_service
 
-        self.hooks = {}
         
     def get(self):
         pass

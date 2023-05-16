@@ -11,8 +11,14 @@ from src.utils.logger import Logger
 Logger.set_logger_path(Globals.artifacts_path.joinpath("logs.txt"))
 
 
-def create_scheduler(app_container: AppContainer):
-    scheduler = BackgroundScheduler(daemon=True)
+def create_scheduler(app_c: AppContainer):
+    scheduler = BackgroundScheduler()
+    
+    scheduler.add_job(
+        app_c.tcmb_collector.run, 
+        "cron", 
+        day_of_week=app_c.tcmb_collector.cron["day_of_week"], hour=app_c.tcmb_collector.cron["hour"], minute=app_c.tcmb_collector.cron["minute"]
+    )
     
     ...
     

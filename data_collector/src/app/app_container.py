@@ -21,3 +21,4 @@ class AppContainer(metaclass=Singleton):
     base_container = BaseContainer(config_service=config_service, data_service=data_service)
 
     tcmb_collector = TCMBCollector(base_container)
+    yapikredi_collector = YapiKrediCollector(base_container)

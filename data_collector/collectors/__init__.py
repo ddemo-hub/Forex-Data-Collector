@@ -1,1 +1,2 @@
 from .tcmb_collector import TCMBCollector
+from .yapikredi_collector import YapiKrediCollector

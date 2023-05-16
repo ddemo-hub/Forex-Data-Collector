@@ -13,5 +13,5 @@ class Globals(metaclass=Singleton):
     
     artifacts_path = project_path.parent.joinpath("artifacts", DATETIME_NOW)
     db_schema_path = project_path.parent.joinpath("schema.sql")
-    
-    memory_cache = {}
+
+    hooks = []    

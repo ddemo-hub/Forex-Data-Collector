@@ -59,6 +59,7 @@ class DataService(metaclass=Singleton):
         
     def dml(self, query: str):
         """ Insert, Detele, Update Operations """
+        response = True
         self.__connect()
         try:
             with self.connection.cursor() as cursor:
@@ -68,11 +69,11 @@ class DataService(metaclass=Singleton):
 
         except Exception as ex:
             Logger.error(f"[ERROR][dml] While executing the query {query}, the following exception raised:\n{ex}")
-            return 0
+            response = False
         
         finally:
             self.__disconnect()
-            return 1
+            return response
         
     def dql(self, query: str, columns: list):
         """ Select Operation """
@@ -86,8 +87,21 @@ class DataService(metaclass=Singleton):
 
         except Exception as ex:
             Logger.error(f"[ERROR][dql] While executing the query {query}, the following exception raised:\n{ex}")
-            return 0
+            df_table = False
         
         finally:
             self.__disconnect()
             return df_table
+
+    def df_to_sql(self, data_frame: pandas.DataFrame, table: str, ):
+        self.__connect()    
+        try:
+            response = data_frame.to_sql(name=table, con=self.connection, if_exists="replace", index=True)
+       
+        except Exception as ex:
+            Logger.error(f"[ERROR][df_to_sql] While inserting the DataFrame {data_frame}, the following exception raised:\n{ex}")
+            response = False
+       
+        finally:
+            self.__disconnect()
+            return response

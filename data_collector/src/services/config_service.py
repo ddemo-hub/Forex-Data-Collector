@@ -53,3 +53,19 @@ class ConfigService(metaclass=Singleton):
     @property
     def port(self):
         return self.config["service"]["port"]
+
+    @property
+    def currencies(self):
+        return self.config["collectors"]["currencies"]
+
+    @property
+    def tcmb_api_url(self):
+        return self.config["collectors"]["tcmb_collector"]["api_url"]
+
+    @property
+    def tcmb_api_key(self):
+        return self.config["collectors"]["tcmb_collector"]["api_key"]
+
+    @property
+    def tcmb_cron(self):
+        return self.config["collectors"]["tcmb_collector"]["cron"]
