@@ -38,7 +38,7 @@ class TCMBCollector(BaseCollector):
                     for hook in tcmb_hooks:
                         if (currency[6:9] in hook["currencies"]):
                             try:
-                                requests.post(url=hook, json={"timestamp": timestamp, currency[6:9]: rates[currency].item()})
+                                requests.post(url=hook, json={"timestamp": timestamp, "exchange": "TCMB", currency[6:9]: rates[currency].item()})
                             except Exception as ex:
                                 self.logger.error(f"[TCMBCollector][POST] {ex}")
 

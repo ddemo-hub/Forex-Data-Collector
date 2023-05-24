@@ -23,8 +23,9 @@ def create_scheduler(app_container: AppContainer):
     scheduler = BackgroundScheduler()
     
     scheduler.add_job(
-        TCMBCollector.run(app_container.tcmb_collector),
-        "cron", 
+        TCMBCollector.run,
+        args=[app_container.tcmb_collector],
+        trigger="cron", 
         day_of_week=TCMBCollector.cron["day_of_week"], hour=TCMBCollector.cron["hour"], minute=TCMBCollector.cron["minute"]
     )
     

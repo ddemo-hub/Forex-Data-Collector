@@ -59,6 +59,10 @@ class ConfigService(metaclass=Singleton):
         return self.config["collectors"]["currencies"]
 
     @property
+    def exchanges(self):
+        return self.config["collectors"]["exchanges"]
+
+    @property
     def tcmb_api_url(self):
         return self.config["collectors"]["tcmb_collector"]["api_url"]
 
