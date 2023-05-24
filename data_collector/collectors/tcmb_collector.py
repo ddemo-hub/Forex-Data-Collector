@@ -7,9 +7,11 @@ import requests
 import pandas
 
 class TCMBCollector(BaseCollector):
+    cron: dict
+    
     def __init__(self, base_container):
         super().__init__(base_container)
-        self.cron = self.config_service.tcmb_cron
+        type(self).cron = self.config_service.tcmb_cron
 
     def run(self):
         tcmb_hooks = [hook for hook in Globals.cache.get("hooks") if ("TCMB" in hook["exchanges"])]
@@ -33,11 +35,12 @@ class TCMBCollector(BaseCollector):
                     Globals.cache.set(cache_key, rates[currency].item())
                     
                     # Send the new value of the currency to the hooks
-                    for target_hook in [hook for hook in tcmb_hooks if (currency[6:9] in hook["currencies"])]:
-                        try:
-                            requests.post(url=target_hook, json={"timestamp": timestamp, currency[6:9]: rates[currency].item()})
-                        except Exception as ex:
-                            self.logger.error(f"[TCMBCollector][POST] {ex}")
+                    for hook in tcmb_hooks:
+                        if (currency[6:9] in hook["currencies"]):
+                            try:
+                                requests.post(url=hook, json={"timestamp": timestamp, currency[6:9]: rates[currency].item()})
+                            except Exception as ex:
+                                self.logger.error(f"[TCMBCollector][POST] {ex}")
 
                 # Construct the query for the currency
                 upsert_queries.append(

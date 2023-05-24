@@ -6,6 +6,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_caching import Cache
  
+from collectors import *
+ 
 from data_collector.controllers.webhook_registrar import WebhookRegistrar
 from data_collector.controllers.data_provider import DataProvider
 
@@ -17,13 +19,13 @@ from src.utils.logger import Logger
 Logger.set_logger_path(Globals.artifacts_path.joinpath("logs.txt"))
 
 
-def create_scheduler(app_c: AppContainer):
+def create_scheduler(app_container: AppContainer):
     scheduler = BackgroundScheduler()
     
     scheduler.add_job(
-        app_c.tcmb_collector.run, 
+        TCMBCollector.run(app_container.tcmb_collector),
         "cron", 
-        day_of_week=app_c.tcmb_collector.cron["day_of_week"], hour=app_c.tcmb_collector.cron["hour"], minute=app_c.tcmb_collector.cron["minute"]
+        day_of_week=TCMBCollector.cron["day_of_week"], hour=TCMBCollector.cron["hour"], minute=TCMBCollector.cron["minute"]
     )
     
     ...
