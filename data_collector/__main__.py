@@ -61,6 +61,7 @@ if __name__ == "__main__":
     
     Globals.cache = Cache()
     Globals.cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
+    Globals.cache.set("hooks", [])
     
     scheduler.start()
     app.run()
