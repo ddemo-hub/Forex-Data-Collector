@@ -21,3 +21,6 @@ Python packages used can be found in requirements.txt
   - If [SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] exception is raised, run "export OPENSSL_CONF=openssl.cnf"
     + The cause of this exception is TCMB's EVDS system. 
     + WARNING: When enabling Legacy Unsafe Renegotiation, SSL connections will be vulnerable to the Man-in-the-Middle prefix attack as described in https://cve.mitre.org/cgi-bin/cvename.cgi?name=CAN-2009-3555 
+
+## Future Work
+  - Use Redis instead of the filesystem cache

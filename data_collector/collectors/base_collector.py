@@ -10,4 +10,3 @@ class BaseCollector(metaclass=Singleton):
         self.data_service = base_container.data_service
         
         self.logger = Logger
-        self.hooks = Globals.hooks

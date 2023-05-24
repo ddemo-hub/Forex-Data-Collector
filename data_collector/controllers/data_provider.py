@@ -4,8 +4,9 @@ from src.services.data_service import DataService
 from src.utils.globals import Globals
 
 from flask.views import MethodView
+from flask import request
 
-class ServiceController(MethodView):
+class DataProvider(MethodView):
     init_every_request= False
     
     def __init__(self, config_service: ConfigService, data_service: DataService):
