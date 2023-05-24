@@ -1,5 +1,4 @@
 from src.services.config_service import ConfigService
-from src.services.data_service import DataService 
 
 from src.utils.singleton import Singleton
 
@@ -11,12 +10,20 @@ class DataCollectorApp(metaclass=Singleton):
     def __init__(
         self, 
         config_service: ConfigService, 
-        data_service: DataService,
+        tcmb_collector: TCMBCollector
     ):
         self.config_service = config_service
-        self.data_service = data_service
-        
-        ...
+        self.tcmb_collector = tcmb_collector
 
     def schedule_jobs(self, scheduler: BackgroundScheduler):
-        pass
+        tcmb_cron = self.config_service.tcmb_cron
+        scheduler.add_job(
+            TCMBCollector.run,
+            args=[self.tcmb_collector],
+            trigger="cron", 
+            day_of_week=tcmb_cron["day_of_week"], hour=tcmb_cron["hour"], minute=tcmb_cron["minute"]
+        )
+
+        ...
+                
+        return scheduler

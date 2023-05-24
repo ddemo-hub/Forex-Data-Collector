@@ -6,12 +6,9 @@ from datetime import datetime
 import requests
 import pandas
 
-class TCMBCollector(BaseCollector):
-    cron: dict
-    
+class TCMBCollector(BaseCollector):    
     def __init__(self, base_container):
         super().__init__(base_container)
-        type(self).cron = self.config_service.tcmb_cron
 
     def run(self):
         tcmb_hooks = [hook for hook in Globals.cache.get("hooks") if ("TCMB" in hook["exchanges"])]

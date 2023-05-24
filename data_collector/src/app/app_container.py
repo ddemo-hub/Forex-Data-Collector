@@ -5,6 +5,7 @@ from src.services.config_service import ConfigService
 from src.services.data_service import DataService
 
 from .base_container import BaseContainer
+from .data_collector_app import DataCollectorApp
 
 from collectors import *
 
@@ -22,3 +23,10 @@ class AppContainer(metaclass=Singleton):
 
     tcmb_collector = TCMBCollector(base_container)
     yapikredi_collector = YapiKrediCollector(base_container)
+
+    ...
+
+    data_collector_app = DataCollectorApp(
+        config_service=config_service, 
+        tcmb_collector=tcmb_collector
+    )
