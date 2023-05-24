@@ -13,15 +13,14 @@ class DataProvider(MethodView):
         self.config_service = config_service
         self.data_service = data_service
 
-        
     def get(self):
         json_request = request.json
         try:
             if json_request.keys() >= {"end_timestamp", "start_timestamp"}:
                 try:
-                    select_query = f"SELECT * FROM public.forex_rates WHERE 'currency' = {json_request['currency']} " + \
-                                f"AND 'exchange' = {json_request['exchange']} AND 'buy_sell' = {json_request['buy_sell']} " + \
-                                f"AND 'timestamp' BETWEEN '{json_request['start_timestamp']}' AND '{json_request['end_timestamp']}';" 
+                    select_query = f"SELECT * FROM public.forex_rates WHERE 'currency' = '{json_request['currency']}' " + \
+                                   f"AND 'exchange' = '{json_request['exchange']}' AND 'buy_sell' = '{json_request['buy_sell']}' " + \
+                                   f"AND 'timestamp' BETWEEN {json_request['start_timestamp']} AND {json_request['end_timestamp']};" 
                     
                     requested_data = self.data_service.dql(query=select_query, columns=["timestamp", "currency", "exchange", "buy_sell", "rate"])
                     return make_response(requested_data.to_json(), 200)

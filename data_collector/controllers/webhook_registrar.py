@@ -13,10 +13,12 @@ class WebhookRegistrar(MethodView):
         self.config_service = config_service
         self.data_service = data_service
 
-        
     def get(self):
         try:
             hook = request.json
+            
+            if hook.keys() >= {"port", "exchanges", "currencies"}:
+                return make_response(jsonify("Missing parameters. A valid request must contain the parameters 'port', 'currencies' and 'exchanges'"), 400)
             
             # Construct the address
             hook_address = f"{request.remote_addr}/{hook['port']}"
