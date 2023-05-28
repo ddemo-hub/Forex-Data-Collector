@@ -1,3 +1,6 @@
+from src.utils.globals import Globals
+from src.utils.logger import Logger
+
 from .base_collector import BaseCollector
 
 class YapiKrediCollector(BaseCollector):    

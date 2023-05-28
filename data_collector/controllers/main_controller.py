@@ -1,5 +1,4 @@
-from src.services.config_service import ConfigService
-from src.services.data_service import DataService
+from .base_controller import BaseController
 
 from src.utils.globals import Globals
 
@@ -18,12 +17,11 @@ counter_scheduler.add_job(update_counter, trigger="cron", second="*/5")
 counter_scheduler.start()
 ####################################################################
 
-class MainController(MethodView):
+class MainController(MethodView, BaseController):
     init_every_request= False
     
-    def __init__(self, config_service: ConfigService, data_service: DataService):
-        self.config_service = config_service
-        self.data_service = data_service
+    def __init__(self, base_container):
+        super().__init__(base_container)
         
     def get(self):
         global count

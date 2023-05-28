@@ -7,8 +7,6 @@ from src.services.data_service import DataService
 from .base_container import BaseContainer
 from .data_collector_app import DataCollectorApp
 
-from controllers.websocket_events import WebsocketEvents
-
 from collectors import *
 
 from dataclasses import dataclass
@@ -33,5 +31,3 @@ class AppContainer(metaclass=Singleton):
         tcmb_collector=tcmb_collector,
         
     )
-
-    websocket_events = WebsocketEvents(config_service=config_service, data_service=data_service)

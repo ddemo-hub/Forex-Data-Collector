@@ -1,6 +1,7 @@
 from .base_collector import BaseCollector
 
 from src.utils.globals import Globals
+from src.utils.logger import Logger
 
 from datetime import datetime
 import requests
@@ -39,7 +40,7 @@ class TCMBCollector(BaseCollector):
                             try:
                                 requests.post(url=hook, json={"timestamp": timestamp, "exchange": "TCMB", currency[6:9]: rates[currency].item()})
                             except Exception as ex:
-                                self.logger.error(f"[TCMBCollector][POST] {ex}")
+                                Logger.error(f"[TCMBCollector][POST] {ex}")
                                         
                     # Construct the query for the currency
                     upsert_queries.append(
@@ -55,4 +56,4 @@ class TCMBCollector(BaseCollector):
             self.data_service.dml(query="".join(upsert_queries)) 
                   
         except Exception as ex:
-            self.logger.error(f"[TCMBCollector][GET] {ex}")
+            Logger.error(f"[TCMBCollector][GET] {ex}")

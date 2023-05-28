@@ -1,17 +1,15 @@
-from src.services.config_service import ConfigService
-from src.services.data_service import DataService
+from .base_controller import BaseController
 
 from src.utils.globals import Globals
 
 from flask import request, jsonify, make_response
 from flask.views import MethodView
 
-class WebhookRegistrar(MethodView):
+class WebhookRegistrar(MethodView, BaseController):
     init_every_request= False
     
-    def __init__(self, config_service: ConfigService, data_service: DataService):
-        self.config_service = config_service
-        self.data_service = data_service
+    def __init__(self, base_container):
+        super().__init__(base_container)
 
     def get(self):
         try:

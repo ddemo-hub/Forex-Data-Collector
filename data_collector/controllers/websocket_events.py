@@ -1,17 +1,19 @@
-from src.services.config_service import ConfigService
-from src.services.data_service import DataService
+from .base_controller import BaseController
 
-class WebsocketEvents():
-    config_service: ConfigService
-    data_service: DataService
+from flask_socketio import Namespace
 
-    def __init__(self, config_service: ConfigService, data_service: DataService):
-        type(self).config_service = config_service
-        type(self).data_service = data_service
+class WebsocketEvents(Namespace, BaseController):
+    def __init__(self, namespace: str, base_container):
+        super(Namespace, self).__init__(namespace)
+        super(BaseController, self).__init__(base_container)
         
-    @staticmethod
-    def example_event():
-        # WebsocketEvents.config_service......
+    def on_connect(self):
+        pass
+
+    def on_disconnect(self):
         pass
     
+    def example_event(self, *args):
+        ...
+
     ...
