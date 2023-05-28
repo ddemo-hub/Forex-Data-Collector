@@ -13,6 +13,9 @@ def update_counter():
     global count 
     count += 1
     Globals.socketio.emit("update_counter", {'count': count})
+counter_scheduler = BackgroundScheduler()
+counter_scheduler.add_job(update_counter, trigger="cron", second="*/5")
+counter_scheduler.start()
 ####################################################################
 
 class MainController(MethodView):
@@ -21,10 +24,6 @@ class MainController(MethodView):
     def __init__(self, config_service: ConfigService, data_service: DataService):
         self.config_service = config_service
         self.data_service = data_service
-
-        counter_scheduler = BackgroundScheduler()
-        counter_scheduler.add_job(update_counter, trigger="cron", second="*/30")
-        counter_scheduler.start()
         
     def get(self):
         global count
