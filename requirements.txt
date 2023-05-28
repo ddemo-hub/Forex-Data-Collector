@@ -1,7 +1,7 @@
 APScheduler==3.10.1
 Flask==2.3.2
 Flask-Caching==2.0.2
-flask-socketio==5.8.0
+flask-socketio==5.3.4
 pandas==2.0.1
 psycopg2-binary==2.9.6
 PyYAML==6.0

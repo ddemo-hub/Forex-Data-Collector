@@ -17,5 +17,8 @@ clean:
 	rm -rf data_collector/src/utils/__pycache__
 	rm -rf data_collector/src/app/__pycache__
 	rm -rf data_collector/src/__pycache__
+	rm -rf data_collector/__pycache__
+
+	rm -rf artifacts
 
 	rm -rf .venv
