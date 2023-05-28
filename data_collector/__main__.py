@@ -62,10 +62,6 @@ def create_socketio(app_container: AppContainer, flask_app: Flask):
     return socketio
 
 def main(app_container: AppContainer):
-    # Initialize Scheduler
-    scheduler = BackgroundScheduler()
-    scheduler = app_container.data_collector_app.schedule_jobs(scheduler=scheduler)
-    
     # Create App
     flask_app = create_app(app_container)
     
@@ -74,9 +70,13 @@ def main(app_container: AppContainer):
     Globals.cache.init_app(app=flask_app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
     Globals.cache.set("hooks", [])
     
-    # Create web socket
+    # Create Websocket
     socketio = create_socketio(app_container, flask_app)
     Globals.socketio = socketio
+
+    # Create Scheduler
+    scheduler = BackgroundScheduler()
+    scheduler = app_container.data_collector_app.schedule_jobs(scheduler=scheduler)
     
     # Start the scheduler and the Flask app
     scheduler.start()
