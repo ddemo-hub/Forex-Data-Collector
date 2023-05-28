@@ -1,5 +1,6 @@
 from .singleton import Singleton
 
+from flask_socketio import SocketIO
 from flask_caching import Cache
 
 from dataclasses import dataclass
@@ -18,3 +19,5 @@ class Globals(metaclass=Singleton):
 
     cache_path = artifacts_path.joinpath("cache")
     cache: Cache
+
+    socketio: SocketIO

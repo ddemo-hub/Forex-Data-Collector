@@ -5,9 +5,11 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_caching import Cache
+from flask_socketio import SocketIO
  
 from data_collector.controllers.webhook_registrar import WebhookRegistrar
 from data_collector.controllers.data_provider import DataProvider
+from data_collector.controllers.main_controller import MainController
 
 from src.app.app_container import AppContainer 
 
@@ -16,13 +18,6 @@ from src.utils.logger import Logger
 
 Logger.set_logger_path(Globals.artifacts_path.joinpath("logs.txt"))
 
-
-def create_scheduler(app_container: AppContainer):
-    scheduler = BackgroundScheduler()
-    
-    scheduler = app_container.data_collector_app.schedule_jobs(scheduler=scheduler)
-    
-    return scheduler
 
 def create_app(app_container: AppContainer):
     app = Flask(__name__)
@@ -44,16 +39,49 @@ def create_app(app_container: AppContainer):
             data_service=app_container.data_service
         )
     )
+    app.add_url_rule(
+        "/", 
+        view_func=MainController.as_view(
+            "main", 
+            config_service=app_container.config_service, 
+            data_service=app_container.data_service
+        )
+    )
+    
+    ...
         
     return app
 
-if __name__ == "__main__":
-    scheduler = create_scheduler(AppContainer)
-    app = create_app(AppContainer)
+def create_socketio(app_container: AppContainer, flask_app: Flask):
+    socketio = SocketIO(flask_app)
     
+    socketio.on_event("example event", app_container.websocket_events.example_event)
+    
+    ...
+    
+    return socketio
+
+def main(app_container: AppContainer):
+    # Initialize Scheduler
+    scheduler = BackgroundScheduler()
+    scheduler = app_container.data_collector_app.schedule_jobs(scheduler=scheduler)
+    
+    # Create App
+    flask_app = create_app(app_container)
+    
+    # Create Cache
     Globals.cache = Cache()
-    Globals.cache.init_app(app=app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
+    Globals.cache.init_app(app=flask_app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
     Globals.cache.set("hooks", [])
     
+    # Create web socket
+    socketio = create_socketio(app_container, flask_app)
+    Globals.socketio = socketio
+    
+    # Start the scheduler and the Flask app
     scheduler.start()
-    app.run()
+    socketio.run(flask_app)
+    
+
+if __name__ == "__main__":
+    main(AppContainer)

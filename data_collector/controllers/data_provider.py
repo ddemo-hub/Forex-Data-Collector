@@ -42,8 +42,8 @@ class DataProvider(MethodView):
                 except KeyError as ex:
                     if json_request['exchange'] not in self.config_service.exchanges:
                         error_message = f"The 'exchange' parameter must be either one of {self.config_service.exchanges}"
-                    elif json_request['currency'] not in self.config_service.currencies.keys():
-                        error_message = f"The 'currency' parameter must be either one of {self.config_service.currencies.keys()}"
+                    elif json_request['currency'] not in self.config_service.currencies:
+                        error_message = f"The 'currency' parameter must be either one of {self.config_service.currencies}"
                     elif json_request["buy_sell"] != "buy" and json_request["buy_sell"] != "sell":
                         error_message = f"The 'buy_sell' parameter must be either one of 'buy' or 'sell'"            
                     else: 
