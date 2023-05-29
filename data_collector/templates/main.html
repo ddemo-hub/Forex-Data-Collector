@@ -1,17 +1,38 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <div>
-            <span id="counter">{{count}}</span>
-        </div>
+        <form method="POST">
+            <label>Select currency: </label>
+                <select name="currency" id="currency">
+                    {% for currency in currencies %}
+                        <option value="{{currency}}">{{currency}}</option>
+                    {% endfor %}
+                </select>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        {% if selected_currency != "NULL" %}
+            {% for exchange in rates[0].keys() %}
+                <div>
+                    {{exchange}}:  
+                    buy: <span id="{{exchange}}_{{selected_currency}}_BUY">{{rates[0][exchange]}}</span>
+                    sell: <span id="{{exchange}}_{{selected_currency}}_SELL">{{rates[1][exchange]}}</span>
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <script src="{{ url_for('static', filename='socketio.js') }}"></script>
         <script>
             const socket = io({autoConnect: true});
 
-            socket.on("update_counter", function(json) {
-                console.log(json.count);
-                document.getElementById("counter").textContent = json.count;
+            socket.on("update_TCMB", function(json) {
+                data = json.data;
+                for (var currency in data) {
+                    try {
+                        document.getElementById(`TCMB_${currency}`).textContent = data[currency];
+                    } catch(err) {}
+                }
             });
         </script>
     </body>

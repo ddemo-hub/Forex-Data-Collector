@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS Forex_Rates(
     buy_sell VARCHAR(4),
     rate FLOAT,
     PRIMARY KEY (timestamp, currency, exchange, buy_sell),
-    CHECK (buy_sell in ('BUYY', 'SELL')),
+    CHECK (buy_sell in ('BUY', 'SELL')),
     CHECK (currency in ('USD', 'EUR', 'RUB')),
     CHECK (exchange in ('TCMB', 'yapikredi'))
 );
