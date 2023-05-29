@@ -27,26 +27,33 @@ class TCMBCollector(BaseCollector):
             upsert_queries = []
             live_rates = {}        
             for currency in rates.columns.drop(["Tarih", "UNIXTIME"]):
-                cache_key = f"TCMB_{currency[6:9]}_{'sell' if currency[10] == 'S' else 'buy'}"
-                live_rates[f"{currency[6:9]}_{'sell' if currency[10] == 'S' else 'buy'}"] = rates[currency].item()
+                curr = currency[6:9]
+                live_rate = rates[currency].item()
+                is_buy_sell = 'SELL' if currency[10] == 'S' else 'BUY'
                 
-                if Globals.cache.get(cache_key) != rates[currency].item():
+                live_rates[f"{curr}_{is_buy_sell}"] = live_rate
+                
+                cached_data = Globals.cache.get(f"{curr}_{is_buy_sell}")
+                cached_rate = cached_data["TCMB"]
+                
+                if cached_rate != live_rate:
                     # Update the cache if the currency's value is changed
-                    Globals.cache.set(cache_key, rates[currency].item())
+                    cached_data["TCMB"] = live_rate
+                    Globals.cache.set(f"{curr}_{is_buy_sell}", cached_data)
                     
                     # Send the new value of the currency to the hooks
                     for hook in tcmb_hooks:
-                        if (currency[6:9] in hook["currencies"]):
+                        if (curr in hook["currencies"]):
                             try:
-                                requests.post(url=hook, json={"timestamp": timestamp, "exchange": "TCMB", currency[6:9]: rates[currency].item()})
+                                requests.post(url=hook, json={"timestamp": timestamp, "exchange": "TCMB", "buy_sell": is_buy_sell, curr: live_rate})
                             except Exception as ex:
                                 Logger.error(f"[TCMBCollector][POST] {ex}")
                                         
                     # Construct the query for the currency
                     upsert_queries.append(
                         f"INSERT INTO public.forex_rates (timestamp, currency, exchange, buy_sell, rate) VALUES " + \
-                        f"({timestamp}, '{currency[6:9]}', 'TCMB', '{'sell' if currency[10] == 'S' else 'buy'}', {rates[currency].item()}) " + \
-                        f"ON CONFLICT (timestamp, currency, exchange, buy_sell) DO UPDATE SET rate = {31};"
+                        f"({timestamp}, '{curr}', 'TCMB', '{is_buy_sell}', {live_rate}) " + \
+                        f"ON CONFLICT (timestamp, currency, exchange, buy_sell) DO UPDATE SET rate = {live_rate};"
                     ) 
 
             # Update websockets

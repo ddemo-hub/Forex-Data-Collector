@@ -6,8 +6,7 @@ init:
 	python3 -m venv .venv
 	.venv/bin/pip install -r requirements.txt
 
-run: init 
-	export OPENSSL_CONF=openssl.cnf
+run: install init 
 	.venv/bin/python3 data_collector/__main__.py
 
 clean:	

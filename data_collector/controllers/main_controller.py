@@ -11,10 +11,13 @@ count = 1
 def update_counter():
     global count 
     count += 1
-    Globals.socketio.emit("update_counter", {'count': count})
+    try:
+        Globals.socketio.emit("update_counter", {'count': count})
+    except:
+        pass
 counter_scheduler = BackgroundScheduler()
 counter_scheduler.add_job(update_counter, trigger="cron", second="*/5")
-counter_scheduler.start()
+#counter_scheduler.start()
 ####################################################################
 
 class MainController(MethodView, BaseController):

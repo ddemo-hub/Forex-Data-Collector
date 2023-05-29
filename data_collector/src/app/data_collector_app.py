@@ -27,3 +27,8 @@ class DataCollectorApp(metaclass=Singleton):
         ...
                 
         return scheduler
+    
+    def run_all(self):
+        self.tcmb_collector.run()
+        
+        ...

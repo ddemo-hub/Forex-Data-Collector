@@ -53,14 +53,26 @@ def create_app(app_container: AppContainer):
         
     return app
 
+def create_cache(app_container: AppContainer, flask_app: Flask):
+    # Initialize Cache
+    cache = Cache()
+    cache.init_app(app=flask_app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
+    
+    # Set cache keys
+    cache.set("hooks", [])
+    for currency in app_container.config_service.currencies:
+        dict_exchanges = {exchange: 0 for exchange in app_container.config_service.exchanges}
+        cache.set(f"{currency}_BUY", dict_exchanges)
+        cache.set(f"{currency}_SELL", dict_exchanges)    
+
+    return cache
+
 def main(app_container: AppContainer):
     # Create App
     flask_app = create_app(app_container)
     
     # Create Cache
-    cache = Cache()
-    cache.init_app(app=flask_app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
-    cache.set("hooks", [])
+    cache = create_cache(app_container, flask_app)
     Globals.cache = cache
     
     # Create Websocket
@@ -71,6 +83,9 @@ def main(app_container: AppContainer):
     # Create Scheduler
     scheduler = BackgroundScheduler()
     scheduler = app_container.data_collector_app.schedule_jobs(scheduler=scheduler)
+    
+    # Run all collectors once before starting the scheduler and the app
+    app_container.data_collector_app.run_all()
     
     # Start the scheduler and the Flask app
     scheduler.start()
