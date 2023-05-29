@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        
+    </head>
+
     <body>
         <form method="POST">
             <label>Select currency: </label>
@@ -13,11 +17,15 @@
         </form>
 
         {% if selected_currency != "NULL" %}
+            <div>
+                {{selected_currency}}
+            </div>
+
             {% for exchange in rates[0].keys() %}
                 <div>
                     {{exchange}}:  
-                    buy: <span id="{{exchange}}_{{selected_currency}}_BUY">{{rates[0][exchange]}}</span>
-                    sell: <span id="{{exchange}}_{{selected_currency}}_SELL">{{rates[1][exchange]}}</span>
+                    buy = <span id="{{exchange}}_{{selected_currency}}_BUY">{{rates[0][exchange]}}</span>
+                    sell = <span id="{{exchange}}_{{selected_currency}}_SELL">{{rates[1][exchange]}}</span>
                 </div>
             {% endfor %}
         {% endif %}
@@ -26,11 +34,12 @@
         <script>
             const socket = io({autoConnect: true});
 
-            socket.on("update_TCMB", function(json) {
-                data = json.data;
+            socket.on("update_rates", function(json) {
+                exchange = json.exchange
+                rates = json.rates;
                 for (var currency in data) {
                     try {
-                        document.getElementById(`TCMB_${currency}`).textContent = data[currency];
+                        document.getElementById(`${exchange}_${currency}`).textContent = rates[currency];
                     } catch(err) {}
                 }
             });

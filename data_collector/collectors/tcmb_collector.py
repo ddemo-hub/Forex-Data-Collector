@@ -57,7 +57,7 @@ class TCMBCollector(BaseCollector):
                     ) 
 
             # Update websockets
-            Globals.socketio.emit("update_TCMB", {"data": live_rates})
+            Globals.socketio.emit("update_rates", {"exchange": "TCMB", "rates": live_rates})
             
             # Update the database
             self.data_service.dml(query="".join(upsert_queries)) 

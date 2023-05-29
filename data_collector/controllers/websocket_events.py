@@ -1,5 +1,3 @@
-from .base_controller import BaseController
-
 from flask_socketio import Namespace
 
 class WebsocketEvents(Namespace):

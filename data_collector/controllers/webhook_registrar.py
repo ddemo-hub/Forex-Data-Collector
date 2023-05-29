@@ -19,7 +19,7 @@ class WebhookRegistrar(MethodView, BaseController):
                 return make_response(jsonify("Missing parameters. A valid request must contain the parameters 'port', 'currencies' and 'exchanges'"), 400)
             
             # Construct the address
-            hook_address = f"{request.remote_addr}/{hook['port']}"
+            hook_address = f"{request.remote_addr}:{hook['port']}"
             
             # Construct the dictionary that holds the required data for the hook connection
             hook["address"] = hook_address
