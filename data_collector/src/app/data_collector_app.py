@@ -29,6 +29,8 @@ class DataCollectorApp(metaclass=Singleton):
         return scheduler
     
     def run_all(self):
+        #TODO THE COLLECTORS SHOULD RUN CONCURRENTLY IN DIFFERENT THREADS
+        
         self.tcmb_collector.run()
         
         ...

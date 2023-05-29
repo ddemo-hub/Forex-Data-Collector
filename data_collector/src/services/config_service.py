@@ -73,3 +73,11 @@ class ConfigService(metaclass=Singleton):
     @property
     def tcmb_cron(self):
         return self.config["collectors"]["tcmb_collector"]["cron"]
+
+    @property
+    def yapikredi_url(self):
+        return self.config["collectors"]["yapikredi"]["url"]
+    
+    @property
+    def yapikredi_rate_indices(self):
+        return self.config["collectors"]["yapikredi"]["rate_indices"]
