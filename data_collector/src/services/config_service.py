@@ -76,8 +76,12 @@ class ConfigService(metaclass=Singleton):
 
     @property
     def yapikredi_url(self):
-        return self.config["collectors"]["yapikredi"]["url"]
+        return self.config["collectors"]["yapikredi_collector"]["url"]
     
     @property
     def yapikredi_rate_indices(self):
-        return self.config["collectors"]["yapikredi"]["rate_indices"]
+        return self.config["collectors"]["yapikredi_collector"]["rate_indices"]
+    
+    @property
+    def yapikredi_cron(self):
+        return self.config["collectors"]["yapikredi_collector"]["cron"]

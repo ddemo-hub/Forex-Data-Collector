@@ -24,7 +24,7 @@ class YapiKrediCollector(BaseCollector):
             
             live_rates = {}
             upsert_queries = []
-            for currency, index in self.config_service.yapikredi_rate_indices:
+            for currency, index in self.config_service.yapikredi_rate_indices.items():
                 rate = float(str(forex_table[index])[4:-5].replace(",", "."))
                 
                 live_rates[currency] = rate

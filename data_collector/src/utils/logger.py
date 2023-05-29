@@ -33,11 +33,11 @@ class Logger:
         log_time = datetime.now().strftime("%Y/%m/%d %H.%M.%S")
         with open(cls.logger_path, "a") as log_file:
             log_file.write(f"[{log_time}][WARN] {message}\n")    
-        print(f"[{log_time}][INFO] {message}")
+        print(f"[{log_time}][WARN] {message}")
 
     @classmethod
     def error(cls, message):
         log_time = datetime.now().strftime("%Y/%m/%d %H.%M.%S")
         with open(cls.logger_path, "a") as log_file:
             log_file.write(f"[{log_time}][ERROR] {message}\n")   
-        print(f"[{log_time}][INFO] {message}")
+        print(f"[{log_time}][ERROR] {message}")

@@ -21,11 +21,12 @@ class DataService(metaclass=Singleton):
             Parse .sql file and execute the statements 
             SQL statements must end with a semicolon
         """
-        connection = psycopg2.connect(            
+        connection = psycopg2.connect(
             user=self.config_service.postgres_user,
             password=self.config_service.postgres_password,
             host=self.config_service.postgres_host,
             port=self.config_service.postgres_port,
+            database=self.config_service.postgres_database
         )
         cursor = connection.cursor()
 
@@ -68,7 +69,7 @@ class DataService(metaclass=Singleton):
             self.connection.commit()
 
         except Exception as ex:
-            Logger.error(f"[ERROR][dml] While executing the query {query}, the following exception raised:\n{ex}")
+            Logger.error(f"[dml] While executing the query {query}, the following exception raised:\n{ex}")
             response = False
         
         finally:
@@ -86,7 +87,7 @@ class DataService(metaclass=Singleton):
                 df_table = pandas.DataFrame(records, columns=columns)
 
         except Exception as ex:
-            Logger.error(f"[ERROR][dql] While executing the query {query}, the following exception raised:\n{ex}")
+            Logger.error(f"[dql] While executing the query {query}, the following exception raised:\n{ex}")
             df_table = False
         
         finally:
@@ -99,7 +100,7 @@ class DataService(metaclass=Singleton):
             response = data_frame.to_sql(name=table, con=self.connection, if_exists="replace", index=True)
        
         except Exception as ex:
-            Logger.error(f"[ERROR][df_to_sql] While inserting the DataFrame {data_frame}, the following exception raised:\n{ex}")
+            Logger.error(f"[df_to_sql] While inserting the DataFrame {data_frame}, the following exception raised:\n{ex}")
             response = False
        
         finally:

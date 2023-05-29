@@ -29,5 +29,6 @@ class AppContainer(metaclass=Singleton):
     data_collector_app = DataCollectorApp(
         config_service=config_service, 
         tcmb_collector=tcmb_collector,
+        yapikredi_collector=yapikredi_collector,
         
     )

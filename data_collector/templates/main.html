@@ -37,7 +37,7 @@
             socket.on("update_rates", function(json) {
                 exchange = json.exchange
                 rates = json.rates;
-                for (var currency in data) {
+                for (var currency in rates) {
                     try {
                         document.getElementById(`${exchange}_${currency}`).textContent = rates[currency];
                     } catch(err) {}
