@@ -28,8 +28,6 @@ class ZiraatCollector(BaseCollector):
             for currency, index in self.config_service.ziraat_rate_indices.items():
                 rate = float(forex_table[index].text.replace(",", "."))
                 
-                live_rates[currency] = rate
-                
                 cached_data = Globals.cache.get(currency)
                 cached_rate = cached_data["ziraat"]
                 
@@ -46,6 +44,8 @@ class ZiraatCollector(BaseCollector):
                         currency=currency[:3],
                         rate=rate
                     )
+                    
+                    live_rates[currency] = rate
 
                     upsert_queries.append(
                         f"INSERT INTO public.forex_rates (timestamp, currency, exchange, buy_sell, rate) VALUES " + \

@@ -31,8 +31,6 @@ class TCMBCollector(BaseCollector):
                 live_rate = rates[currency].item()
                 is_buy_sell = 'SELL' if currency[10] == 'S' else 'BUY'
                 
-                live_rates[f"{curr}_{is_buy_sell}"] = live_rate
-                
                 cached_data = Globals.cache.get(f"{curr}_{is_buy_sell}")
                 cached_rate = cached_data["TCMB"]
                 
@@ -50,6 +48,8 @@ class TCMBCollector(BaseCollector):
                         currency=is_buy_sell,
                         rate=live_rates
                     )
+                    
+                    live_rates[f"{curr}_{is_buy_sell}"] = live_rate
                     
                     # Construct the query for the currency
                     upsert_queries.append(

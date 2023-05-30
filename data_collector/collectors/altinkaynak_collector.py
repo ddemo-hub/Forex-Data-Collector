@@ -26,9 +26,7 @@ class AltinkaynakCollector(BaseCollector):
             upsert_queries = []
             for currency, index in self.config_service.altinkaynak_rate_indices.items():
                 rate = float(forex_table[index].text)
-                
-                live_rates[currency] = rate
-                
+                                
                 cached_data = Globals.cache.get(currency)
                 cached_rate = cached_data["altinkaynak"]
                 
@@ -46,6 +44,8 @@ class AltinkaynakCollector(BaseCollector):
                         rate=rate
                     )
 
+                    live_rates[currency] = rate
+                                    
                     upsert_queries.append(
                         f"INSERT INTO public.forex_rates (timestamp, currency, exchange, buy_sell, rate) VALUES " + \
                         f"({timestamp}, '{currency[:3]}', 'altinkaynak', '{currency[4:]}', {rate}) " + \
