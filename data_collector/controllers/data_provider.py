@@ -26,7 +26,7 @@ class DataProvider(MethodView, BaseController):
         
             
         json_request = request.json
-        if not json_request.keys >= {"exchange", "currency", "buy_sell"}:
+        if not json_request.keys() >= {"exchange", "currency", "buy_sell"}:
             return make_response(jsonify("Missing parameters in the request. Params: 'exchange', 'currency', 'buy_sell', 'start_timestamp (optional)', 'end_timestamp (optional)'"), 400)
         
         try:
