@@ -71,6 +71,10 @@ class ConfigService(metaclass=Singleton):
         return self.config["collectors"]["tcmb_collector"]["api_key"]
 
     @property
+    def tcmb_currencies(self):
+        return self.config["collectors"]["tcmb_collector"]["tcmb_currencies"]
+
+    @property
     def tcmb_cron(self):
         return self.config["collectors"]["tcmb_collector"]["cron"]
 
@@ -85,3 +89,27 @@ class ConfigService(metaclass=Singleton):
     @property
     def yapikredi_cron(self):
         return self.config["collectors"]["yapikredi_collector"]["cron"]
+    
+    @property
+    def ziraat_url(self):
+        return self.config["collectors"]["ziraat_collector"]["url"]
+
+    @property
+    def ziraat_rate_indices(self):
+        return self.config["collectors"]["ziraat_collector"]["rate_indices"]
+        
+    @property
+    def ziraat_cron(self):
+        return self.config["collectors"]["ziraat_collector"]["cron"]
+        
+    @property
+    def altinkaynak_url(self):
+        return self.config["collectors"]["altinkaynak_collector"]["url"]
+
+    @property
+    def altinkaynak_rate_indices(self):
+        return self.config["collectors"]["altinkaynak_collector"]["rate_indices"]
+        
+    @property
+    def altinkaynak_cron(self):
+        return self.config["collectors"]["altinkaynak_collector"]["cron"]

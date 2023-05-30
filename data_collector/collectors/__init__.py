@@ -1,2 +1,4 @@
 from .tcmb_collector import TCMBCollector
 from .yapikredi_collector import YapiKrediCollector
+from .ziraat_collector import ZiraatCollector
+from .altinkaynak_collector import AltinkaynakCollector

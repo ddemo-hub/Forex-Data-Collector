@@ -23,12 +23,15 @@ class AppContainer(metaclass=Singleton):
 
     tcmb_collector = TCMBCollector(base_container)
     yapikredi_collector = YapiKrediCollector(base_container)
-
+    ziraat_collector = ZiraatCollector(base_container)
+    altinkaynak_collector = AltinkaynakCollector(base_container)
+    
     ...
 
     data_collector_app = DataCollectorApp(
         config_service=config_service, 
         tcmb_collector=tcmb_collector,
         yapikredi_collector=yapikredi_collector,
-        
+        ziraat_collector=ziraat_collector,
+        altinkaynak_collector=altinkaynak_collector
     )

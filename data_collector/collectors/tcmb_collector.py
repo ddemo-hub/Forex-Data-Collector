@@ -14,7 +14,7 @@ class TCMBCollector(BaseCollector):
     def run(self):
         tcmb_hooks = [hook for hook in Globals.cache.get("hooks") if ("TCMB" in hook["exchanges"])]
         
-        currencies = [f"TP.DK.{currency}.A.YTL-TP.DK.{currency}.S.YTL" for currency in self.config_service.currencies]
+        currencies = [f"TP.DK.{currency}.A.YTL-TP.DK.{currency}.S.YTL" for currency in self.config_service.tcmb_currencies]
         currencies = "-".join(currencies)
         
         datetime_now = datetime.now().strftime("%d-%m-%Y")
@@ -40,15 +40,17 @@ class TCMBCollector(BaseCollector):
                     # Update the cache if the currency's value is changed
                     cached_data["TCMB"] = live_rate
                     Globals.cache.set(f"{curr}_{is_buy_sell}", cached_data)
+
+                    # Post webhooks
+                    self.post_webhooks(
+                        hooks=tcmb_hooks,
+                        timestamp=timestamp,
+                        exchange="TCMB",
+                        buy_sell=curr,
+                        currency=is_buy_sell,
+                        rate=live_rates
+                    )
                     
-                    # Send the new value of the currency to the hooks
-                    for hook in tcmb_hooks:
-                        if (curr in hook["currencies"]):
-                            try:
-                                requests.post(url=hook, json={"timestamp": timestamp, "exchange": "TCMB", "buy_sell": is_buy_sell, curr: live_rate})
-                            except Exception as ex:
-                                Logger.error(f"[TCMBCollector][POST] {ex}")
-                                        
                     # Construct the query for the currency
                     upsert_queries.append(
                         f"INSERT INTO public.forex_rates (timestamp, currency, exchange, buy_sell, rate) VALUES " + \
@@ -57,10 +59,11 @@ class TCMBCollector(BaseCollector):
                     ) 
 
             # Update websockets
-            Globals.socketio.emit("update_rates", {"exchange": "TCMB", "rates": live_rates})
-            
+            self.emit_sockets(exchange="TCMB", rates=live_rates)
+
             # Update the database
-            self.data_service.dml(query="".join(upsert_queries)) 
-                  
+            if upsert_queries:
+                self.data_service.dml(query="".join(upsert_queries)) 
+                    
         except Exception as ex:
             Logger.error(f"[TCMBCollector][GET] {ex}")

@@ -94,7 +94,7 @@ class DataService(metaclass=Singleton):
             self.__disconnect()
             return df_table
 
-    def df_to_sql(self, data_frame: pandas.DataFrame, table: str, ):
+    def df_to_sql(self, data_frame: pandas.DataFrame, table: str):
         self.__connect()    
         try:
             response = data_frame.to_sql(name=table, con=self.connection, if_exists="replace", index=True)
