@@ -14,7 +14,7 @@ class DataCollectorApp(metaclass=Singleton):
         yapikredi_collector: YapiKrediCollector,
         ziraat_collector: ZiraatCollector,
         altinkaynak_collector: AltinkaynakCollector,
-        kapalicarsi_collector: KapalicarsiCollector
+        kapalicarsi_collector: KapaliCarsiCollector
     ):
         self.config_service = config_service
         self.tcmb_collector = tcmb_collector
@@ -54,7 +54,7 @@ class DataCollectorApp(metaclass=Singleton):
         )
         
         scheduler.add_job(
-            KapalicarsiCollector.run,
+            KapaliCarsiCollector.run,
             args=[self.kapalicarsi_collector],
             trigger="cron", 
             second=self.config_service.kapalicarsi_cron["second"]

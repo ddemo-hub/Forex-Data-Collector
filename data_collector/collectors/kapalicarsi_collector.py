@@ -8,7 +8,7 @@ import requests
 import datetime
 
 
-class KapalicarsiCollector(BaseCollector):    
+class KapaliCarsiCollector(BaseCollector):    
     def __init__(self, base_container):
         super().__init__("kapalicarsi", base_container)
         
