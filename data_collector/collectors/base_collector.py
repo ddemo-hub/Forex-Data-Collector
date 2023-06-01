@@ -7,21 +7,30 @@ from abc import ABC, abstractmethod
 import requests
 
 class BaseCollector(ABC):
-    def __init__(self, base_container: BaseContainer):
+    def __init__(self, exchange, base_container: BaseContainer):
+        self.exchange = exchange
         self.config_service = base_container.config_service
         self.data_service = base_container.data_service
 
-    def post_webhooks(self, hooks: list, timestamp: int, exchange: str, buy_sell: str, currency: str, rate: float):
+    def check_response(self, response: requests.models.Response):
+        if response.status_code != 200:
+            Logger.error(f"[{self.exchange}] Status Code: {response.status_code}")
+
+    def post_webhooks(self, hooks: list, timestamp: int, buy_sell: str, currency: str, rate: float):
         for hook in hooks:
             if currency in hook["currencies"]:
                 try:
-                    requests.post(url=hook, json={"timestamp": timestamp, "exchange": exchange, "buy_sell": buy_sell, currency: rate})
+                    requests.post(url=hook, json={"timestamp": timestamp, "buy_sell": buy_sell, currency: rate})
                 except Exception as ex:
-                    Logger.error(f"[{exchange}][POST] {ex}")
+                    Logger.error(f"[{self.exchange}][POST WEBHOOK] {ex}")
         
-    def emit_sockets(self, exchange: str, rates: dict):
-        Globals.socketio.emit("update_rates", {"exchange": exchange, "rates": rates})
-
+    def emit_sockets(self, rates: dict):
+        try:
+            Globals.socketio.emit("update_rates", {"exchange": self.exchange, "rates": rates})
+        except Exception as ex:
+            Logger.error(f"[{self.exchange}][EMIT WEBSOCKET] {ex}")
+    
+    
     @abstractmethod
     def run(self):
         pass

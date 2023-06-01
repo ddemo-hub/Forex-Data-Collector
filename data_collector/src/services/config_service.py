@@ -113,3 +113,15 @@ class ConfigService(metaclass=Singleton):
     @property
     def altinkaynak_cron(self):
         return self.config["collectors"]["altinkaynak_collector"]["cron"]
+            
+    @property
+    def kapalicarsi_url(self):
+        return self.config["collectors"]["kapalicarsi_collector"]["url"]
+
+    @property
+    def kapalicarsi_rate_indices(self):
+        return self.config["collectors"]["kapalicarsi_collector"]["rate_indices"]
+        
+    @property
+    def kapalicarsi_cron(self):
+        return self.config["collectors"]["kapalicarsi_collector"]["cron"]

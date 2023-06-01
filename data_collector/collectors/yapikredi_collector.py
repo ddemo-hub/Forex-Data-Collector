@@ -10,14 +10,18 @@ import datetime
 
 class YapiKrediCollector(BaseCollector):    
     def __init__(self, base_container):
-        super().__init__(base_container)
+        super().__init__("yapikredi", base_container)
 
     def run(self):
+        Logger.print(f"[INFO][{self.exchange}] Collector runs")
+        
         timestamp = int(datetime.datetime.now().timestamp())
-        yapikredi_hooks = [hook for hook in Globals.cache.get("hooks") if ("yapikredi" in hook["exchanges"])]
+        yapikredi_hooks = [hook for hook in Globals.cache.get("hooks") if (self.exchange in hook["exchanges"])]
         
         try:
             page = requests.get(self.config_service.yapikredi_url)
+            self.check_response(page)
+            
             soup = BeautifulSoup(page.content, "lxml")
             
             forex_table = soup.find_all("td")
@@ -28,17 +32,16 @@ class YapiKrediCollector(BaseCollector):
                 rate = float(forex_table[index].text.replace(",", "."))
                 
                 cached_data = Globals.cache.get(currency)
-                cached_rate = cached_data["yapikredi"]
+                cached_rate = cached_data[self.exchange]
                 
                 if rate != cached_rate:
-                    cached_data["yapikredi"] = rate
+                    cached_data[self.exchange] = rate
                     Globals.cache.set(currency, cached_data)
                     
                     # Post webhooks
                     self.post_webhooks(
                         hooks=yapikredi_hooks,
                         timestamp=timestamp,
-                        exchange="yapikredi",
                         buy_sell=currency[4:],
                         currency=currency[:3],
                         rate=rate
@@ -48,16 +51,17 @@ class YapiKrediCollector(BaseCollector):
                     
                     upsert_queries.append(
                         f"INSERT INTO public.forex_rates (timestamp, currency, exchange, buy_sell, rate) VALUES " + \
-                        f"({timestamp}, '{currency[:3]}', 'yapikredi', '{currency[4:]}', {rate}) " + \
+                        f"({timestamp}, '{currency[:3]}', '{self.exchange}', '{currency[4:]}', {rate}) " + \
                         f"ON CONFLICT (timestamp, currency, exchange, buy_sell) DO UPDATE SET rate = {rate};"
                     ) 
                     
             # Update websockets
-            self.emit_sockets(exchange="yapikredi", rates=live_rates)
+            self.emit_sockets(rates=live_rates)
             
             # Update the database
             if upsert_queries:
                 self.data_service.dml(query="".join(upsert_queries)) 
-            
+                
+            Logger.print(f"[INFO][{self.exchange}] Collector terminates")
         except Exception as ex:
-            Logger.error(f"[Yapı Kredi][GET] {ex}")
+            Logger.error(f"[{self.exchange}][GET] {ex}")

@@ -10,14 +10,18 @@ import datetime
 
 class ZiraatCollector(BaseCollector):    
     def __init__(self, base_container):
-        super().__init__(base_container)
+        super().__init__("ziraat", base_container)
         
     def run(self):
+        Logger.print(f"[INFO][{self.exchange}] Collector runs")
+        
         timestamp = int(datetime.datetime.now().timestamp())
-        ziraat_hooks = [hook for hook in Globals.cache.get("hooks") if ("ziraat" in hook["exchanges"])]
+        ziraat_hooks = [hook for hook in Globals.cache.get("hooks") if (self.exchange in hook["exchanges"])]
 
         try:
             page = requests.get(self.config_service.ziraat_url)
+            self.check_response(page)
+            
             soup = BeautifulSoup(page.content, "lxml")
             
             forex_div = soup.find("div", {"class": "js-item", "data-id": "rdIntBranchDoviz"})
@@ -29,17 +33,16 @@ class ZiraatCollector(BaseCollector):
                 rate = float(forex_table[index].text.replace(",", "."))
                 
                 cached_data = Globals.cache.get(currency)
-                cached_rate = cached_data["ziraat"]
+                cached_rate = cached_data[self.exchange]
                 
                 if rate != cached_rate:
-                    cached_data["ziraat"] = rate
+                    cached_data[self.exchange] = rate
                     Globals.cache.set(currency, cached_data)
                     
                     # Post webhooks
                     self.post_webhooks(
                         hooks=ziraat_hooks,
                         timestamp=timestamp,
-                        exchange="ziraat",
                         buy_sell=currency[4:],
                         currency=currency[:3],
                         rate=rate
@@ -49,16 +52,17 @@ class ZiraatCollector(BaseCollector):
 
                     upsert_queries.append(
                         f"INSERT INTO public.forex_rates (timestamp, currency, exchange, buy_sell, rate) VALUES " + \
-                        f"({timestamp}, '{currency[:3]}', 'ziraat', '{currency[4:]}', {rate}) " + \
+                        f"({timestamp}, '{currency[:3]}', '{self.exchange}', '{currency[4:]}', {rate}) " + \
                         f"ON CONFLICT (timestamp, currency, exchange, buy_sell) DO UPDATE SET rate = {rate};"
                     ) 
                     
             # Update websockets
-            self.emit_sockets(exchange="ziraat", rates=live_rates)
+            self.emit_sockets(rates=live_rates)
             
             # Update the database
             if upsert_queries:
                 self.data_service.dml(query="".join(upsert_queries)) 
 
+            Logger.print(f"[INFO][{self.exchange}] Collector terminates")
         except Exception as ex:
-            Logger.error(f"[Ziraat][GET] {ex}")
+            Logger.error(f"[{self.exchange}][GET] {ex}")

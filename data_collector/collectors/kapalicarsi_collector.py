@@ -8,28 +8,31 @@ import requests
 import datetime
 
 
-class AltinkaynakCollector(BaseCollector):    
+class KapalicarsiCollector(BaseCollector):    
     def __init__(self, base_container):
-        super().__init__("altinkaynak", base_container)
+        super().__init__("kapalicarsi", base_container)
         
     def run(self):
         Logger.print(f"[INFO][{self.exchange}] Collector runs")
         
         timestamp = int(datetime.datetime.now().timestamp())
-        altinkaynak_hooks = [hook for hook in Globals.cache.get("hooks") if (self.exchange in hook["exchanges"])]
+        kapalicarsi_hooks = [hook for hook in Globals.cache.get("hooks") if (self.exchange in hook["exchanges"])]
 
         try:
-            page = requests.get(self.config_service.altinkaynak_url)
+            page = requests.get(self.config_service.kapalicarsi_url)
             self.check_response(page)
             
             soup = BeautifulSoup(page.content, "lxml")
             
-            forex_table = soup.find("table", {"class": "table"}).find_all("td")
+            forex_table = soup.find_all("tr")
             
             live_rates = {}
             upsert_queries = []
-            for currency, index in self.config_service.altinkaynak_rate_indices.items():
-                rate = float(forex_table[index].text)
+            for currency, index in self.config_service.kapalicarsi_rate_indices.items():
+                if currency[4:] == "BUY":
+                    rate = float(forex_table[index].find_all("td")[1].text.replace(",", "."))
+                elif currency[4:] == "SELL":
+                    rate = float(forex_table[index].find_all("td")[2].text.replace(",", "."))
                                 
                 cached_data = Globals.cache.get(currency)
                 cached_rate = cached_data[self.exchange]
@@ -40,7 +43,7 @@ class AltinkaynakCollector(BaseCollector):
                     
                     # Post webhooks
                     self.post_webhooks(
-                        hooks=altinkaynak_hooks,
+                        hooks=kapalicarsi_hooks,
                         timestamp=timestamp,
                         buy_sell=currency[4:],
                         currency=currency[:3],
@@ -63,6 +66,5 @@ class AltinkaynakCollector(BaseCollector):
                 self.data_service.dml(query="".join(upsert_queries)) 
                 
             Logger.print(f"[INFO][{self.exchange}] Collector terminates")
-
         except Exception as ex:
             Logger.error(f"[{self.exchange}][GET] {ex}")

@@ -41,3 +41,8 @@ class Logger:
         with open(cls.logger_path, "a") as log_file:
             log_file.write(f"[{log_time}][ERROR] {message}\n")   
         print(f"[{log_time}][ERROR] {message}")
+
+    @classmethod
+    def print(cls, message):
+        log_time = datetime.now().strftime("%Y/%m/%d %H.%M.%S")
+        print(f"[{log_time}] {message}")

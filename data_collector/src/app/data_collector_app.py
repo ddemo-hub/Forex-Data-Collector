@@ -13,13 +13,15 @@ class DataCollectorApp(metaclass=Singleton):
         tcmb_collector: TCMBCollector,
         yapikredi_collector: YapiKrediCollector,
         ziraat_collector: ZiraatCollector,
-        altinkaynak_collector: AltinkaynakCollector
+        altinkaynak_collector: AltinkaynakCollector,
+        kapalicarsi_collector: KapalicarsiCollector
     ):
         self.config_service = config_service
         self.tcmb_collector = tcmb_collector
         self.yapikredi_collector = yapikredi_collector
         self.ziraat_collector = ziraat_collector
         self.altinkaynak_collector = altinkaynak_collector
+        self.kapalicarsi_collector = kapalicarsi_collector
 
     def schedule_jobs(self, scheduler: BackgroundScheduler):
         tcmb_cron = self.config_service.tcmb_cron
@@ -50,6 +52,13 @@ class DataCollectorApp(metaclass=Singleton):
             trigger="cron", 
             second=self.config_service.altinkaynak_cron["second"]
         )
+        
+        scheduler.add_job(
+            KapalicarsiCollector.run,
+            args=[self.kapalicarsi_collector],
+            trigger="cron", 
+            second=self.config_service.kapalicarsi_cron["second"]
+        )
         ...
                 
         return scheduler
@@ -61,5 +70,6 @@ class DataCollectorApp(metaclass=Singleton):
         self.yapikredi_collector.run()
         self.ziraat_collector.run()
         self.altinkaynak_collector.run()
+        self.kapalicarsi_collector.run()
         
         ...

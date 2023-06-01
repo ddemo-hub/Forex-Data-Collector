@@ -25,6 +25,7 @@ class AppContainer(metaclass=Singleton):
     yapikredi_collector = YapiKrediCollector(base_container)
     ziraat_collector = ZiraatCollector(base_container)
     altinkaynak_collector = AltinkaynakCollector(base_container)
+    kapalicarsi_collector = KapalicarsiCollector(base_container)
     
     ...
 
@@ -33,5 +34,6 @@ class AppContainer(metaclass=Singleton):
         tcmb_collector=tcmb_collector,
         yapikredi_collector=yapikredi_collector,
         ziraat_collector=ziraat_collector,
-        altinkaynak_collector=altinkaynak_collector
+        altinkaynak_collector=altinkaynak_collector,
+        kapalicarsi_collector=kapalicarsi_collector
     )
