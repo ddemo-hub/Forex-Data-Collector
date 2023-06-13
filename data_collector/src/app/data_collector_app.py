@@ -52,7 +52,7 @@ class DataCollectorApp(metaclass=Singleton):
             trigger="cron", 
             second=self.config_service.altinkaynak_cron["second"]
         )
-        
+    
         scheduler.add_job(
             KapaliCarsiCollector.run,
             args=[self.kapalicarsi_collector],

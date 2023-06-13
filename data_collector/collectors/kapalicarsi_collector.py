@@ -10,13 +10,16 @@ import datetime
 
 class KapaliCarsiCollector(BaseCollector):    
     def __init__(self, base_container):
-        super().__init__("kapalicarsi", base_container)
+        super().__init__("Kapalı Çarşı", base_container)
         
     def run(self):
         Logger.print(f"[INFO][{self.exchange}] Collector runs")
         
         timestamp = int(datetime.datetime.now().timestamp())
-        kapalicarsi_hooks = [hook for hook in Globals.cache.get("hooks") if (self.exchange in hook["exchanges"])]
+        
+        cached_hooks = Globals.cache.get("hooks")
+        kapalicarsi_hooks = [hook for hook in cached_hooks if (self.exchange in hook["exchanges"])]
+        Globals.cache.set("hooks", cached_hooks)
 
         try:
             page = requests.get(self.config_service.kapalicarsi_url)

@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS Forex_Rates(
     PRIMARY KEY (timestamp, currency, exchange, buy_sell),
     CHECK (buy_sell in ('BUY', 'SELL')),
     CHECK (currency in ('USD', 'EUR', 'GBP', 'AED', 'DKK', 'KWD', 'JPY', 'CHF', 'RUB')),
-    CHECK (exchange in ('TCMB', 'yapikredi', 'ziraat', 'altinkaynak', 'kapalicarsi'))
+    CHECK (exchange in ('TCMB', 'Yapı Kredi', 'Ziraat Bankası', 'Altınkaynak', 'Kapalı Çarşı'))
 );

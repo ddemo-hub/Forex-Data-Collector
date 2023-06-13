@@ -10,13 +10,16 @@ import datetime
 
 class YapiKrediCollector(BaseCollector):    
     def __init__(self, base_container):
-        super().__init__("yapikredi", base_container)
+        super().__init__("Yapı Kredi", base_container)
 
     def run(self):
         Logger.print(f"[INFO][{self.exchange}] Collector runs")
         
         timestamp = int(datetime.datetime.now().timestamp())
-        yapikredi_hooks = [hook for hook in Globals.cache.get("hooks") if (self.exchange in hook["exchanges"])]
+        
+        cached_hooks = Globals.cache.get("hooks")
+        yapikredi_hooks = [hook for hook in cached_hooks if (self.exchange in hook["exchanges"])]
+        Globals.cache.set("hooks", cached_hooks)        
         
         try:
             page = requests.get(self.config_service.yapikredi_url)

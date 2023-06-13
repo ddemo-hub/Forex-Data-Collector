@@ -5,6 +5,8 @@ from src.utils.globals import Globals
 from flask import request, render_template
 from flask.views import MethodView
 
+import pandas
+
 class MainController(MethodView, BaseController):
     init_every_request= False
     

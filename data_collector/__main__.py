@@ -59,7 +59,7 @@ def create_cache(app_container: AppContainer, flask_app: Flask):
     cache.init_app(app=flask_app, config={"CACHE_TYPE": "filesystem",'CACHE_DIR': Globals.cache_path})
     
     # Set cache keys
-    cache.set("hooks", [])
+    cache.set("hooks", [{"address": None, "exchanges": [], "currencies": []}])
     for currency in app_container.config_service.currencies:
         dict_exchanges = {exchange: 0 for exchange in app_container.config_service.exchanges}
         cache.set(f"{currency}_BUY", dict_exchanges)
