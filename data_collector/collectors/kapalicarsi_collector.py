@@ -67,4 +67,4 @@ class KapaliCarsiCollector(BaseCollector):
                 
             Logger.print(f"[INFO][{self.exchange}] Collector terminates")
         except Exception as ex:
-            Logger.error(f"[{self.exchange}][GET] {ex}")
+            Logger.error(f"[{self.exchange}] {ex}")

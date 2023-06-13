@@ -12,7 +12,11 @@ class MainController(MethodView, BaseController):
         super().__init__(base_container)
         
     def get(self):
-        return render_template("main.html", currencies=self.config_service.currencies, selected_currency="NULL")
+        default_currency = "USD" 
+        
+        rates = [Globals.cache.get(f"{default_currency}_{buy_sell}") for buy_sell in ["BUY", "SELL"]]
+        
+        return render_template("main.html", currencies=self.config_service.currencies, selected_currency=default_currency, rates=rates)
     
     def post(self):
         selected_currency = request.values["currency"]

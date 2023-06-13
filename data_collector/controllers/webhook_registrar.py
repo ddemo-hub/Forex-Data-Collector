@@ -1,6 +1,8 @@
 from .base_controller import BaseController
 
 from src.utils.globals import Globals
+from src.utils.logger import Logger 
+
 
 from flask import request, jsonify, make_response
 from flask.views import MethodView
@@ -30,7 +32,9 @@ class WebhookRegistrar(MethodView, BaseController):
             cached_hooks.append(hook)
             Globals.cache.set("hooks", cached_hooks)
             
+            Logger.info(f"[WEBHOOK REGISTRAR] Webhook registered for the request {hook}")
             return make_response(jsonify("success"), 200)
         except Exception as ex:
+            Logger.error(f"[WEBHOOK REGISTRAR] Following exception has been raised while handling the request {hook}:\n{ex}")
             return make_response(jsonify(ex), 400)
         

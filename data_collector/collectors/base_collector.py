@@ -26,6 +26,7 @@ class BaseCollector(ABC):
         
     def emit_sockets(self, rates: dict):
         try:
+            Logger.print(f"[INFO] Emitting {'exchange': self.exchange, 'rates': rates}")
             Globals.socketio.emit("update_rates", {"exchange": self.exchange, "rates": rates})
         except Exception as ex:
             Logger.error(f"[{self.exchange}][EMIT WEBSOCKET] {ex}")

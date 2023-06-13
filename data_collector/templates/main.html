@@ -1,39 +1,125 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
-    </head>
+
+        <style> 
+            body {
+                font-family: 'lato', sans-serif;
+            }
+            .container {
+                max-width: 1000px;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            h2 {
+                font-size: 26px;
+                margin: 20px 0;
+                text-align: center;
+            }
+            h2 small {
+                font-size: 0.5em;
+            }
+            .responsive-table li {
+                border-radius: 3px;
+                padding: 25px 30px;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 25px;
+            }
+            .responsive-table .table-header {
+                background-color: #95a5a6;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+            }
+            .responsive-table .table-row {
+                background-color: #fff;
+                box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+            }
+            .responsive-table .col-1 {
+                flex-basis: 10%;
+            }
+            .responsive-table .col-2 {
+                flex-basis: 40%;
+            }
+            .responsive-table .col-3 {
+                flex-basis: 25%;
+            }
+            .responsive-table .col-4 {
+                flex-basis: 25%;
+            }
+            @media all and (max-width: 767px) {
+                .responsive-table .table-header {
+                    display: none;
+                }
+                .responsive-table li {
+                    display: block;
+                }
+                .responsive-table .col {
+                    flex-basis: 100%;
+                }
+                .responsive-table .col {
+                    display: flex;
+                    padding: 10px 0;
+                }
+                .responsive-table .col:before {
+                    color: #6c7a89;
+                    padding-right: 10px;
+                    content: attr(data-label);
+                    flex-basis: 50%;
+                    text-align: right;
+                }
+            }
+            .form-select {
+                font-family: 'Times New Roman', Times, serif; 
+                font-size: 16px; 
+                border-radius: 15px;
+                padding: 10% 25%;
+                background-color: white;
+            }
+        </style>
+    </head>  
 
     <body>
-        <form method="POST">
-            <label>Select currency: </label>
-                <select name="currency" id="currency">
-                    {% for currency in currencies %}
-                        <option value="{{currency}}">{{currency}}</option>
-                    {% endfor %}
-                </select>
-
-            <input type="submit" value="Submit">
-        </form>
-
-        {% if selected_currency != "NULL" %}
-            <div>
-                {{selected_currency}}
+        
+        <div class="container">
+            <div style="display:flex; flex-direction:row; justify-content:space-around; padding: 0% 30%">
+                <h2 style="align-self: center"> Döviz Cinsi:</h2>
+                <form id="currency_form" style="align-self: center" method="POST">
+                    <select name="currency" id="currency" class="form-select">
+                        {% for currency in currencies %}
+                            {% if currency == selected_currency %}
+                                <option selected onclick="submit_form()" value="{{currency}}">{{ currency }}</option>
+                            {% else %}
+                                <option onclick="submit_form()" value="{{currency}}">{{ currency }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </form>   
             </div>
 
-            {% for exchange in rates[0].keys() %}
-                <div>
-                    {{exchange}}:  
-                    buy = <span id="{{exchange}}_{{selected_currency}}_BUY">{{rates[0][exchange]}}</span>
-                    sell = <span id="{{exchange}}_{{selected_currency}}_SELL">{{rates[1][exchange]}}</span>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        <script src="{{ url_for('static', filename='socketio.js') }}"></script>
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-2">Piyasa</div>
+                    <div class="col col-3">Alış(TL)</div>
+                    <div class="col col-4">Satış(Tl)</div>
+                </li>
+                {% for exchange in rates[0].keys() %}
+                    {% if rates[0][exchange] != 0 %}
+                        <li class="table-row">
+                            <div class="col col-2" data-label="Piyasa">{{ exchange }}</div>
+                            <div class="col col-3" data-label="Alış(TL)"> <span id="{{exchange}}_{{selected_currency}}_BUY"> {{ rates[0][exchange] }} </span> </div>
+                            <div class="col col-4" data-label="Satış(TL)"> <span id="{{exchange}}_{{selected_currency}}_SELL"> {{ rates[1][exchange] }} </span> </div>
+                        </li> 
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        
         <script>
             const socket = io({autoConnect: true});
-
             socket.on("update_rates", function(json) {
                 exchange = json.exchange
                 rates = json.rates;
@@ -43,6 +129,12 @@
                     } catch(err) {}
                 }
             });
+
+            function submit_form(){
+                var form = document.getElementById("currency_form");
+                form.submit();
+            }
         </script>
     </body>
 </html>
+

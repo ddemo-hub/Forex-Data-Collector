@@ -69,7 +69,7 @@ class DataService(metaclass=Singleton):
             self.connection.commit()
 
         except Exception as ex:
-            Logger.error(f"[dml] While executing the query {query}, the following exception raised:\n{ex}")
+            Logger.error(f"[DML] While executing the query {query}, the following exception raised:\n{ex}")
             response = False
         
         finally:
@@ -87,7 +87,7 @@ class DataService(metaclass=Singleton):
                 df_table = pandas.DataFrame(records, columns=columns)
 
         except Exception as ex:
-            Logger.error(f"[dql] While executing the query {query}, the following exception raised:\n{ex}")
+            Logger.error(f"[DQL] While executing the query {query}, the following exception raised:\n{ex}")
             df_table = False
         
         finally:
@@ -100,7 +100,7 @@ class DataService(metaclass=Singleton):
             response = data_frame.to_sql(name=table, con=self.connection, if_exists="replace", index=True)
        
         except Exception as ex:
-            Logger.error(f"[df_to_sql] While inserting the DataFrame {data_frame}, the following exception raised:\n{ex}")
+            Logger.error(f"[DF_TO_SQL] While inserting the DataFrame {data_frame}, the following exception raised:\n{ex}")
             response = False
        
         finally:
