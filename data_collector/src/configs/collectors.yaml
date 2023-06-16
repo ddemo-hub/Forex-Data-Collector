@@ -1,3 +1,92 @@
-tcmb_collector:
-  api_key:
+currencies: ["USD", "EUR", "GBP", "AED", "DKK", "KWD", "JPY", "CHF", "RUB"]           # All currencies supported
+exchanges: ["TCMB", "Yapı Kredi", "Ziraat Bankası", "Altınkaynak", "Kapalı Çarşı"]                             # All exchanges supported
 
+tcmb_collector:         # For detailed information: https://evds2.tcmb.gov.tr/help/videos/EVDS_Web_Servis_Kullanim_Kilavuzu.pdf
+  api_url: https://evds2.tcmb.gov.tr/service/evds/series={}&startDate={}&endDate={}&type=csv&key={}
+  api_key: YOUR EVDS API KEY
+  tcmb_currencies: ["USD", "EUR", "GBP", "AED", "DKK", "KWD", "JPY", "CHF"]
+  cron: {"day_of_week": "mon-fri", "hour": 15, "minute": 30}
+
+yapikredi_collector:
+  url: https://www.yapikredi.com.tr/yatirimci-kosesi/doviz-bilgileri
+  rate_indices: {
+    "USD_BUY": 2, 
+    "USD_SELL": 3,
+    "EUR_BUY": 7, 
+    "EUR_SELL": 8,
+    "GBP_BUY": 17, 
+    "GBP_SELL": 18,
+    "AED_BUY": 67,
+    "AED_SELL": 68,
+    "DKK_BUY": 27,
+    "DKK_SELL": 28,
+    "KWD_BUY": 52,
+    "KWD_SELL": 53,
+    "JPY_BUY": 42,
+    "JPY_SELL": 43,
+    "CHF_BUY": 37,
+    "CHF_SELL": 38
+  }
+  cron: {"second": "*/30"}
+
+ziraat_collector:
+  url: https://www.ziraatbank.com.tr/tr/fiyatlar-ve-oranlar
+  rate_indices: {
+    "USD_BUY": 2, 
+    "USD_SELL": 3,
+    "EUR_BUY": 8, 
+    "EUR_SELL": 9,
+    "GBP_BUY": 14, 
+    "GBP_SELL": 15,
+    "DKK_BUY": 32,
+    "DKK_SELL": 33,
+    "JPY_BUY": 26,
+    "JPY_SELL": 27,
+    "CHF_BUY": 20,
+    "CHF_SELL": 21
+  }
+  cron: {"second": "*/30"}
+
+altinkaynak_collector:
+  url: https://www.altinkaynak.com/Doviz/Kur/Guncel
+  rate_indices: {
+    "USD_BUY": 2, 
+    "USD_SELL": 3,
+    "EUR_BUY": 9, 
+    "EUR_SELL": 10,
+    "GBP_BUY": 23, 
+    "GBP_SELL": 24,
+    "JPY_BUY": 30,
+    "JPY_SELL": 31,
+    "CHF_BUY": 16,
+    "CHF_SELL": 17,
+    "KWD_BUY": 100,
+    "KWD_SELL": 101,
+    "RUB_BUY": 58,
+    "RUB_SELL": 59 
+  }
+  cron: {"second": "*/30"}
+
+kapalicarsi_collector:
+  url: https://kur.doviz.com/kapalicarsi
+  rate_indices: {
+    "USD_BUY": 1, 
+    "USD_SELL": 1,
+    "EUR_BUY": 2, 
+    "EUR_SELL": 2,
+    "GBP_BUY": 3, 
+    "GBP_SELL": 3,
+    "AED_BUY": 7,
+    "AED_SELL": 7,
+    "DKK_BUY": 9,
+    "DKK_SELL": 9,
+    "JPY_BUY": 12,
+    "JPY_SELL": 12,
+    "CHF_BUY": 4,
+    "CHF_SELL": 4,
+    "KWD_BUY": 13,
+    "KWD_SELL": 13,
+    "RUB_BUY": 6,
+    "RUB_SELL": 6 
+  }
+  cron: {"second": "*/15"}
