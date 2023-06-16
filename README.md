@@ -10,7 +10,7 @@ PostgreSQL 15 \
 Python 3 
 
 ### Setup
-* Fill in the configuration parameters in .yaml files located at 'data_collector/src/configs/' with required information
+* Fill in the configuration parameters in .yaml files located at 'data_collector/src/configs/' with the required information
 * __On Linux:__
   - Run "make install" if Python 3 is not installed
   - Run "make init" to initialize a virtual environment with dependencies installed
