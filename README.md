@@ -1,8 +1,16 @@
 # Forex-Data-Collector
 
 ## Description
-### TBA
-TBA
+### Project
+- A data collector and data provider module that operates on the foreign exchange rates of the Turkish Lira brokered by several banks & exchanges in the Republic of Türkiye.
+- Foreign exchange rates are collected by scraping the data provided by the exchanges at regular intervals as frequently as possible without getting blocked.
+- The data provider module supports WebHook and WebSocket protocols. Every time a change is detected at the forex rates, the change is broadcasted to the hooks & sockets and it is saved into the database. 
+- Currently supported exchanges are: 
+    * Central Bank of the Republic of Türkiye 
+    * Yapı Kredi 
+    * Ziraat Bankası
+    * Altınkaynak
+    * Kapalı Çarşı
 
 ## Installation
 ### Dependencies
